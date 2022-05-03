@@ -30,20 +30,23 @@ const ShoeCard = ({
     : isNewShoe(releaseDate)
       ? 'new-release'
       : 'default'
+  const bannerText = variant === 'new-release' ? 'Just released!' : 'Sale';
 
   return (
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
         <ImageWrapper>
+          <Banner className={variant}>{bannerText}</Banner>
           <Image alt="" src={imageSrc} />
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price className={variant}>{formatPrice(price)}</Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          <SalePrice className={variant}>{formatPrice(salePrice)}</SalePrice>
         </Row>
       </Wrapper>
     </Link>
@@ -55,16 +58,24 @@ const Link = styled.a`
   color: inherit;
 `;
 
-const Wrapper = styled.article``;
+const Wrapper = styled.article`
+  gap: 20px;
+  flex: 1;
+`;
 
 const ImageWrapper = styled.div`
   position: relative;
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  max-width: 300px;
+  border-radius: 10px;
+`;
 
 const Row = styled.div`
   font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -72,7 +83,11 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  &.on-sale {
+    text-decoration: line-through;
+  }
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
@@ -81,6 +96,31 @@ const ColorInfo = styled.p`
 const SalePrice = styled.span`
   font-weight: ${WEIGHTS.medium};
   color: ${COLORS.primary};
+
+  &:not(.on-sale) {
+    display: none;
+  }
+`;
+
+const Banner = styled.div`
+  position: absolute;
+  right: -10px;
+  top: 10px;
+  padding: 4px;
+  color: white;
+  border-radius: 2px;
+
+  &.default {
+    display: none;
+  }
+
+  &.new-release {
+    background: #6868d9;
+  }
+
+  &.on-sale {
+    background: #c62a5f;
+  }
 `;
 
 export default ShoeCard;
